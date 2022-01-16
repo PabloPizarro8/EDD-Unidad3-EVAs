@@ -1,14 +1,19 @@
 
 package eva3_1_ordenamiento;
 
+import static java.util.Arrays.sort;
+
 public class EVA3_1_ORDENAMIENTO {
     
     public static void main(String[] args) {
         
-        int[] aiDatos = new int[6];
+        int[] aiDatos = new int[100000];
         int[] aiCopiaSele = new int[aiDatos.length];
         int[] aiCopiaInse = new int[aiDatos.length];
         int[] aiCopiaBubble = new int[aiDatos.length];
+        int[] aiCopiaQuicki = new int[aiDatos.length];
+        int[] aiCopiaSort = new int[aiDatos.length];
+        
         long iniT, finT;
         
         /*aiDatos[0] = 23;
@@ -20,37 +25,53 @@ public class EVA3_1_ORDENAMIENTO {
         llenar(aiDatos);
         
         System.out.println("Arreglo a ordenar");
-        imprimir(aiDatos);
-        duplicar(aiDatos, aiCopiaSele);
-        duplicar(aiDatos, aiCopiaInse);
-        duplicar(aiDatos, aiCopiaBubble);
+        // imprimir(aiDatos);
         
         System.out.println("\nProbando selectionSort");
+        duplicar(aiDatos, aiCopiaSele);
         iniT = System.nanoTime();
         selectionSort(aiCopiaSele);
         finT = System.nanoTime();
-        imprimir(aiCopiaSele);
+        // imprimir(aiCopiaSele);
         System.out.println("Tiempo en ordenar: " + (finT - iniT));
         
         System.out.println("\nProbando insertionSort");
+        duplicar(aiDatos, aiCopiaInse);
         iniT = System.nanoTime();
         insertionSort(aiCopiaInse);
         finT = System.nanoTime();
-        imprimir(aiCopiaInse);
+        // imprimir(aiCopiaInse);
         System.out.println("Tiempo en ordenar: " + (finT - iniT));
         
         System.out.println("\nProbando bubbleSort");
+        duplicar(aiDatos, aiCopiaBubble);
         iniT = System.nanoTime();
         bubbleSort(aiCopiaBubble);
         finT = System.nanoTime();
-        imprimir(aiCopiaBubble);
+        // imprimir(aiCopiaBubble);
+        System.out.println("Tiempo en ordenar: " + (finT - iniT));
+        
+        System.out.println("\nProbando quickSort");
+        duplicar(aiDatos, aiCopiaQuicki);
+        iniT = System.nanoTime();
+        quickSort(aiCopiaQuicki);
+        finT = System.nanoTime();
+        // imprimir(aiCopiaQuicki);
+        System.out.println("Tiempo en ordenar: " + (finT - iniT));
+        
+        System.out.println("\nProbando javSort");
+        duplicar(aiDatos, aiCopiaSort);
+        iniT = System.nanoTime();
+        sort(aiCopiaSort);
+        finT = System.nanoTime();
+        // imprimir(aiCopiaSort);
         System.out.println("Tiempo en ordenar: " + (finT - iniT));
         
     }
 
     private static void llenar(int[] datos) {
         for (int i = 0; i < datos.length; i++) {
-            datos[i] = (int)(Math.random()*100);
+            datos[i] = (int)(Math.random()*datos.length);
         }
     }
     
@@ -113,4 +134,60 @@ public class EVA3_1_ORDENAMIENTO {
             }
         }
     }
+    
+    public static void quickSort (int [] datos){
+        quickSortRecu(datos, 0, (datos.length - 1) );
+    }
+
+    private static void quickSortRecu(int[] datos, int ini, int fin) {
+        int iPivote;
+        int tooBig;
+        int tooSmall;
+        
+        boolean stopBig = false;
+        boolean stopSmall = false;
+        
+        int tama = fin - ini + 1;
+        if (tama > 1) {
+            iPivote = ini;
+            tooBig = ini +1;
+            tooSmall = fin;
+            
+            for (int i = ini + 1; i <= fin; i++) {
+                if( (datos[tooBig] <= datos[iPivote]) && (!stopBig) ){
+                    tooBig++;
+                }else{
+                    stopBig = true;
+                }
+                
+                if ( (datos[tooSmall] >= datos[iPivote]) && (!stopSmall) ) {
+                    tooSmall--;
+                }else{
+                    stopSmall = true;
+                }
+                
+                if(stopBig && stopSmall){
+                    if(tooBig < tooSmall){
+                        int temp = datos[tooBig];
+                        datos[tooBig] = datos[tooSmall];
+                        datos[tooSmall] = temp;
+                        stopBig = false;
+                        stopSmall = false;
+                    }else{
+                        break;
+                    }
+                }
+            }
+            int temp = datos[iPivote];
+            datos[iPivote] = datos[tooSmall];
+            datos[tooSmall] = temp;
+            iPivote = tooSmall;
+
+            quickSortRecu(datos, ini, (iPivote - 1) );
+
+            quickSortRecu(datos, (iPivote + 1), fin);
+        }
+    }
+    
+    
 }
